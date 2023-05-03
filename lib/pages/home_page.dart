@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:my_baby_health/data/database.dart';
 
 import 'package:my_baby_health/widget/alert_dialog_widget.dart';
 import 'package:my_baby_health/widget/people_tile.dart';
@@ -13,10 +15,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _myBabyBox = Hive.box('myBabyBox');
+  MyBabyHealthDataBase db = MyBabyHealthDataBase();
+
+  @override
+  void initState() {
+    if (_myBabyBox.get('MYBABYSLIST') == null) {
+      db.createInitialData();
+    } else {
+      db.loadData();
+    }
+
+    super.initState();
+  }
+
   final name = TextEditingController();
   final lastName = TextEditingController();
-
-  List peopleList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +49,12 @@ class _HomePageState extends State<HomePage> {
               lastNameController: lastName,
               onSave: () {
                 setState(() {
-                  peopleList.add([name.text, lastName.text]);
+                  db.myBabyList.add([name.text, lastName.text]);
                   name.clear();
                   lastName.clear();
                 });
                 Navigator.of(context).pop();
+                db.updateData();
               },
               onCancel: () {
                 Navigator.of(context).pop();
@@ -50,14 +65,15 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
       body: ListView.builder(
-        itemCount: peopleList.length,
+        itemCount: db.myBabyList.length,
         itemBuilder: (BuildContext context, int index) {
           return PeopleTile(
-            babyName: peopleList[index][0],
-            babyLastName: peopleList[index][1],
+            babyName: db.myBabyList[index][0],
+            babyLastName: db.myBabyList[index][1],
             deliteFunction: (context) => setState(
               () {
-                peopleList.removeAt(index);
+                db.myBabyList.removeAt(index);
+                db.updateData();
               },
             ),
           );

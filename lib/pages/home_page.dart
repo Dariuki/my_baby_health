@@ -55,6 +55,11 @@ class _HomePageState extends State<HomePage> {
           return PeopleTile(
             babyName: peopleList[index][0],
             babyLastName: peopleList[index][1],
+            deliteFunction: (context) => setState(
+              () {
+                peopleList.removeAt(index);
+              },
+            ),
           );
         },
       ),

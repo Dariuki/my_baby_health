@@ -4,6 +4,8 @@ class TextFieldWidget extends StatelessWidget {
   final TextEditingController controller;
   final String title;
   final TextInputType keyboard;
+  
+  
 
   const TextFieldWidget({
     super.key,
@@ -16,7 +18,6 @@ class TextFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      autofocus: true,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),

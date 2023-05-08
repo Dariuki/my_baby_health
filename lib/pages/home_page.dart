@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:my_baby_health/data/database.dart';
+import 'package:my_baby_health/pages/edid_details_page.dart';
 
 import 'package:my_baby_health/widget/alert_dialog_widget.dart';
-import 'package:my_baby_health/widget/people_tile.dart';
+import 'package:my_baby_health/widget/person_tile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -62,14 +63,22 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.person_add_alt_1),
       ),
       body: ListView.builder(
         itemCount: db.myBabyList.length,
         itemBuilder: (BuildContext context, int index) {
-          return PeopleTile(
+          return PersonTile(
             babyName: db.myBabyList[index][0],
             babyLastName: db.myBabyList[index][1],
+            editFunction: (context) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EditDetailsPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
             deliteFunction: (context) => setState(
               () {
                 db.myBabyList.removeAt(index);
